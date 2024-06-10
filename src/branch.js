@@ -102,15 +102,19 @@ export class Branch extends THREE.Group {
     // A branch is a bunch of interconnected cylinders, so we build it one ring of vertices at a time
     let sectionOrigin = origin.clone();
     for (let i = 0; i <= this.params.geometry.sections; i++) {
-      let sectionRadius = radius;
+      let sectionRadius = 0;
 
-      // If creating trunk branch, flare the base of the trunk
-      if (level === 1) {
-        sectionRadius += this.params.trunk.flare / (i + 1);
+      if (i < this.params.geometry.sections || level < this.params.branch.levels) {
+        sectionRadius = radius;
+
+        // If creating trunk branch, flare the base of the trunk
+        if (level === 1) {
+          sectionRadius += this.params.trunk.flare / (i + 1);
+        }
+
+        // Taper the branch with each successive section based on the taper factor
+        sectionRadius *= (1 - this.params.branch.taper * (i / this.params.geometry.sections));
       }
-
-      // Taper the branch with each successive section based on the taper factor
-      sectionRadius *= (1 - this.params.branch.taper * (i / this.params.geometry.sections));
 
       // Create the segments that make up this section.
       let first;
@@ -126,6 +130,7 @@ export class Branch extends THREE.Group {
         // Vary the section radius by a random amount to give some variance in the tree diameter
         // Don't modify the vertices in the last section or the final child branch won't line up
         let segmentRadius = sectionRadius;
+
         if (i > 0 && i < this.params.geometry.sections) {
           segmentRadius *= (1 + rng.random(this.params.geometry.radiusVariance, -this.params.geometry.radiusVariance));
         }
@@ -174,6 +179,10 @@ export class Branch extends THREE.Group {
 
       if (level > 1 && i < this.params.geometry.sections - 1) {
         sectionLength = Math.max(0, sectionLength * (this.params.maturity - 0.5) * 2.0)
+      }
+
+      if (i === this.params.geometry.sections - 1 && level === this.params.branch.levels) {
+        sectionLength *= 2;
       }
 
       sectionOrigin.add(new THREE.Vector3(0, sectionLength, 0).applyEuler(sectionOrientation));
