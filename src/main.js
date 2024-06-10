@@ -10,7 +10,8 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
 
-import { Tree, LeafStyle, LeafType } from './tree';
+import { Tree } from './tree';
+import { LeafStyle, LeafType } from './branch';
 
 let clock = new THREE.Clock();
 // Instantiate a exporter
@@ -54,7 +55,7 @@ scene.add(spotLight);
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 20, 0);
-camera.position.set(70, 20, 0);
+camera.position.set(50, 10, 0);
 
 // ---- POST-PROCESSING -------
 

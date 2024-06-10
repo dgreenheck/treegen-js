@@ -5,8 +5,7 @@ export default {
   // Set the base directory for GitHub pages
   base: '/tree-js/',
   build: {
-    outDir: './dist',
-    sourcemap: true,
+    outDir: './dist'
   },
-  publicDir: './public',
+  publicDir: './public'
 }
